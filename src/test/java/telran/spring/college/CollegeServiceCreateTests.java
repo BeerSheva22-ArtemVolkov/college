@@ -18,7 +18,7 @@ import telran.spring.exceptions.NotFoundException;
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-class CollegeServiceTests {
+class CollegeServiceCreateTests {
 
 	private static final long ID_STUDENT = 124;
 	private static final long ID_LECTURER = 123;

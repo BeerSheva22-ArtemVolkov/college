@@ -114,8 +114,52 @@ public class CollegeServiceImpl implements CollegeService {
 	}
 
 	@Override
-	public List<IdNameMark> findStudentsAvgMarks() {
+	public List<IdNameMark> studentsAvgMarks() {
 		return studentRepository.findStudentsAvgMarks();
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public SubjectDto updateHours(String subjectId, int hours) {
+		Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+				() -> new NotFoundException(String.format("Subject with id %s doesn't exist in DB", subjectId)));
+		subject.setHours(hours);
+		return subject.build();
+		// не надо делать save, тк есть @Transactional
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public SubjectDto updateLecturer(String subjectId, Long lecturerId) {
+		Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+				() -> new NotFoundException(String.format("Subject with id %s doesn't exist in DB", subjectId)));
+		Lecturer lecturer = null;
+		if (lecturerId != null) {
+			lecturer = lecturerRepository.findById(lecturerId).orElseThrow(
+					() -> new NotFoundException(String.format("Lecturer with id %d doesn't exist in DB", lecturerId)));
+		}
+		subject.setLecturer(lecturer);
+		return subject.build();
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public List<PersonDto> removeStudentsNoMarks() {
+		return removeStudentsLessMarks(1);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public List<PersonDto> removeStudentsLessMarks(int nMarks) {
+		List<Student> studentsNoMark = studentRepository.findStudentsLessMark(nMarks);
+		studentsNoMark.forEach(s -> {
+			if (nMarks > 1) {
+				markRepository.findMarkByStudentId(s.getId()).forEach(markRepository::delete);
+			}
+			log.debug("student with id {} is going to be deleted", s.getId());
+			studentRepository.delete(s);
+		});
+		return studentsNoMark.stream().map(Student::build).toList();
 	}
 
 }

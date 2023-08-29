@@ -69,7 +69,7 @@ class ReadCollegeTest {
 	@Test
 	@Sql(scripts = {"college-read-test-script.sql"})
 	void studentsAvgMarks() { 
-		List<IdNameMark> actual = service.findStudentsAvgMarks();
+		List<IdNameMark> actual = service.studentsAvgMarks();
 		assertEquals(5, actual.size());
 		assertEquals(actual.get(0).getMark(), 100);
 		assertEquals(actual.get(1).getMark(), 90);

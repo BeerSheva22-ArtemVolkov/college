@@ -30,4 +30,3 @@ insert into marks (student_id, subject_id, mark) values(125, 'S2', 80);
 
 insert into marks (student_id, subject_id, mark) values(124, 'S1', 20);
 insert into marks (student_id, subject_id, mark) values(124, 'S2', 20);
-insert into marks (student_id, subject_id, mark) values(124, 'S3', 20);

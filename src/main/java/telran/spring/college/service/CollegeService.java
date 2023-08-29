@@ -22,5 +22,13 @@ public interface CollegeService {
 	
 	List<IdName> studentsAvgMarksGreaterCollege(int nMarksThreshold);
 
-	List<IdNameMark> findStudentsAvgMarks();
+	List<IdNameMark> studentsAvgMarks();
+	
+	SubjectDto updateHours(String subjectId, int hours);
+	
+	SubjectDto updateLecturer(String subjectId, Long lecturerId);
+	
+	List<PersonDto> removeStudentsNoMarks();
+	
+	List<PersonDto> removeStudentsLessMarks(int nMarks);
 }

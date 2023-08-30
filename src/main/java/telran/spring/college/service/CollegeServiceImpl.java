@@ -153,9 +153,7 @@ public class CollegeServiceImpl implements CollegeService {
 	public List<PersonDto> removeStudentsLessMarks(int nMarks) {
 		List<Student> studentsNoMark = studentRepository.findStudentsLessMark(nMarks);
 		studentsNoMark.forEach(s -> {
-			if (nMarks > 1) {
-				markRepository.findMarkByStudentId(s.getId()).forEach(markRepository::delete);
-			}
+
 			log.debug("student with id {} is going to be deleted", s.getId());
 			studentRepository.delete(s);
 		});

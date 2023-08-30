@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import telran.spring.college.dto.IdName;
 import telran.spring.college.dto.IdNameMark;
+import telran.spring.college.dto.SubjectType;
 import telran.spring.college.entity.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
@@ -62,5 +63,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 			+ ")", nativeQuery = true)
 	void removeStudentsLessMark(int nMarks);
 	
+	List<IdName> findDistinctByMarksSubjectTypeAndMarksMarkGreaterThanOrderById(SubjectType type, int mark);
 	
 }

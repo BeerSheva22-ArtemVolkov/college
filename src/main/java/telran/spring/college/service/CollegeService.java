@@ -7,6 +7,7 @@ import telran.spring.college.dto.IdNameMark;
 import telran.spring.college.dto.MarkDto;
 import telran.spring.college.dto.PersonDto;
 import telran.spring.college.dto.SubjectDto;
+import telran.spring.college.dto.SubjectType;
 
 public interface CollegeService {
 
@@ -31,4 +32,8 @@ public interface CollegeService {
 	List<PersonDto> removeStudentsNoMarks();
 	
 	List<PersonDto> removeStudentsLessMarks(int nMarks);
+	
+	List<MarkDto> marksStudentSubject(long studentId, String subjectId); 
+	
+	List<IdName> studentsMarksSubject(SubjectType type, int mark);
 }

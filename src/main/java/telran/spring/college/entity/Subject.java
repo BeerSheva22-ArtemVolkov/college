@@ -1,10 +1,14 @@
 package telran.spring.college.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import telran.spring.college.dto.SubjectDto;
 import telran.spring.college.dto.SubjectType;
 
@@ -16,18 +20,21 @@ import telran.spring.college.dto.SubjectType;
 public class Subject {
 
 	@Id
-	String id;
+	public String id;
+	
 	String name;
 	int hours;
-	@Enumerated(EnumType.STRING)
 	
+	@Enumerated(EnumType.STRING)
 	SubjectType type;
-	@ManyToOne // обеспечивает связь с таблицами
+	
+	@ManyToOne(fetch = FetchType.LAZY) // обеспечивает связь с таблицами
 	@JoinColumn(name = "lecturer_id", nullable = true)
+	@OnDelete(action = OnDeleteAction.SET_NULL)
 	Lecturer lecturer;
 
 	public SubjectDto build() {
-		return new SubjectDto(id, name, hours, lecturer == null ? null : lecturer.id, type);
+		return new SubjectDto(id, name, hours, lecturer == null ? null : lecturer.getId(), type);
 	}
 
 	static public Subject of(SubjectDto subject) {

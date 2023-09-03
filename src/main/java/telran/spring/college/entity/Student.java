@@ -2,10 +2,8 @@ package telran.spring.college.entity;
 
 import java.util.List;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import jakarta.persistence.*;
+import lombok.Getter;
 import telran.spring.college.dto.PersonDto;
 
 @Entity
@@ -14,8 +12,10 @@ public class Student extends Person {
 
 	// orphanRemoval = true означает, что студент удалится, как только у него удалится последняя оценка
 //	@OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@Getter
+	// Eager - всегда делай join 
+	// Lazy (по ум) - 
 	@OneToMany(mappedBy = "student") // 1 студент, много оценок
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	List<Mark> marks;
 	
 	public Student() {

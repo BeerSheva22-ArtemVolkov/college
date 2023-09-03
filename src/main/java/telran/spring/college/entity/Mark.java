@@ -1,5 +1,8 @@
 package telran.spring.college.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import telran.spring.college.dto.MarkDto;
@@ -13,11 +16,12 @@ public class Mark {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Автоматически генерируется и проверяется на уникальность
 	int id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_id", nullable = false) // join связывает сущность Student с сущностью Mark
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	Student student;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id", nullable = false)
 	Subject subject;
 

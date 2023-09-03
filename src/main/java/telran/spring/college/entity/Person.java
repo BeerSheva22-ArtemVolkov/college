@@ -12,7 +12,7 @@ import telran.spring.college.dto.PersonDto;
 abstract public class Person {
 
 	@Id
-	long id;
+	public long id;
 	String name;
 	@Column(name = "birth_date")
 	@Temporal(TemporalType.DATE)

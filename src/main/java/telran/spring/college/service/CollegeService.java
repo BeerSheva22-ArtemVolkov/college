@@ -6,6 +6,8 @@ import telran.spring.college.dto.IdName;
 import telran.spring.college.dto.IdNameMark;
 import telran.spring.college.dto.MarkDto;
 import telran.spring.college.dto.PersonDto;
+import telran.spring.college.dto.QueryDto;
+import telran.spring.college.dto.ResponseDto;
 import telran.spring.college.dto.SubjectDto;
 import telran.spring.college.dto.SubjectType;
 
@@ -36,4 +38,10 @@ public interface CollegeService {
 	List<MarkDto> marksStudentSubject(long studentId, String subjectId); 
 	
 	List<IdName> studentsMarksSubject(SubjectType type, int mark);
+	
+	PersonDto removeLecturer(long lecturerId);
+	
+//	List<String> jpqlQuery(QueryDto queryDto);
+	ResponseDto jpqlQuery(QueryDto queryDto);
+	
 }

@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
-public class SubjectDto {
+@NoArgsConstructor
+public class QueryDto {
 
-	String id;
-	String name;
-	int hours;
-	Long lecturerId;
-	SubjectType subjectType;
+	String method;
+	String query;
+	Integer limit;
 }

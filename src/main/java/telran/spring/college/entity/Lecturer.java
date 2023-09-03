@@ -17,4 +17,8 @@ public class Lecturer extends Person {
 		// possible additional validation
 		return new Lecturer(person);
 	}
+	
+//	@OneToMany(mappedBy = "lecturer")
+//	@OnDelete(action = OnDeleteAction.SET_NULL)
+//	List<Subject> subjects;
 }

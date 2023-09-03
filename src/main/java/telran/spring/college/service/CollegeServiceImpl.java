@@ -1,6 +1,9 @@
 package telran.spring.college.service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import telran.spring.college.dto.*;
@@ -25,6 +30,7 @@ public class CollegeServiceImpl implements CollegeService {
 	final StudentRepository studentRepository;
 	final SubjectRepository subjectRepository;
 	final MarkRepository markRepository;
+	final EntityManager em;
 
 	@Value("${app.person.id.min:100000}")
 	long minID;
@@ -154,7 +160,6 @@ public class CollegeServiceImpl implements CollegeService {
 		List<Student> studentsNoMark = studentRepository.findStudentsLessMark(nMarks);
 		studentRepository.removeStudentsLessMark(nMarks);
 //		studentsNoMark.forEach(s -> { 
-//
 //			log.debug("student with id {} is going to be deleted", s.getId());
 //			studentRepository.delete(s);
 //		});
@@ -170,6 +175,50 @@ public class CollegeServiceImpl implements CollegeService {
 	@Override
 	public List<IdName> studentsMarksSubject(SubjectType type, int mark) {
 		return studentRepository.findDistinctByMarksSubjectTypeAndMarksMarkGreaterThanOrderById(type, mark);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public PersonDto removeLecturer(long lecturerId) {
+		Lecturer lecturerRemoved = lecturerRepository.findById(lecturerId)
+				.orElseThrow(() -> new NotFoundException(lecturerId + " lecturer doesn't exist in DB"));
+		lecturerRepository.deleteById(lecturerId);
+		return lecturerRemoved.build();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(readOnly = false)
+	public ResponseDto jpqlQuery(QueryDto queryDto) {
+		Integer limit = queryDto.getLimit();
+		String queryString = String.format("%s %s", queryDto.getQuery(), limit < 0 ? "" : " limit " + limit);
+		Query query = em.createQuery(queryString);
+		List<String> resList = Collections.emptyList();
+		ResponseDto result = new ResponseDto(resList, "success", null);
+		String method = queryDto.getMethod();
+		if (method.toLowerCase().equals("select")) {
+			log.info("select");
+			List<?> resultList = query.getResultList();
+			if (!resultList.isEmpty()) {
+				resList = resultList.get(0).getClass().isArray()
+						? processMultiprojectionQuery((List<Object[]>) resultList)
+						: processSingleprojectionQuery((List<Object>) resultList);
+				result.setArray(resList);
+			}
+		} else {
+			log.info("update/delete");
+			int resInt = query.executeUpdate();
+			result.setSuccessMessage(String.format("%s <%d> rows", (method.toUpperCase() + "ED").replace("EE", "E"), resInt));
+		}
+		return result;
+	}
+
+	private List<String> processMultiprojectionQuery(List<Object[]> resultList) {
+		return resultList.stream().map(Arrays::deepToString).toList();
+	}
+
+	private List<String> processSingleprojectionQuery(List<Object> resultList) {
+		return resultList.stream().map(Object::toString).toList();
 	}
 
 }
